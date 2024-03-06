@@ -1,0 +1,6 @@
+providers.tf
+backend.tf
+.terraform*
+.terragrunt*
+tfplan
+terraform.*

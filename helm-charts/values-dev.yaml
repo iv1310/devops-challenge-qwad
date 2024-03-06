@@ -1,0 +1,32 @@
+---
+apps:
+  replicaCount: 1
+
+  image:
+    tag: "<IMAGE_TAG>"
+
+  prefixName: "dev"
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  ingress:
+    enabled: true
+    hosts:
+      - host: my-apps-uwu-dev.detectionserver.site
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+
+  extraEnv:
+    - name: ENV_TIER
+      value: dev
+    - name: ENV_ITEM_3
+      value: Uwu-item3-dev
+    - name: ENV_ITEM_4
+      value: Uwu-item4-dev

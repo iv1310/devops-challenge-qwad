@@ -1,0 +1,41 @@
+---
+apps:
+  replicaCount: 3
+
+  image:
+    tag: "<IMAGE_TAG>"
+
+  prefixName: "prod"
+
+  ingress:
+    enabled: true
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: my-apps-uwu.detectionserver.site
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+
+  resources:
+    limits:
+      cpu: 300m
+      memory: 256Mi
+    requests:
+      cpu: 150m
+      memory: 128Mi
+
+  extraEnv:
+    - name: ENV_TIER
+      value: prod
+    - name: ENV_ITEM_3
+      value: Uwu-item3-prod
+    - name: ENV_ITEM_4
+      value: Uwu-item4-prod
+
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80

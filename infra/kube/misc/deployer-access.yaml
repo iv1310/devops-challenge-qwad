@@ -1,0 +1,39 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: deployer
+rules:
+  - apiGroups: ["", "extensions", "apps", "autoscaling","batch", "networking.k8s.io"]
+    resources: ["deployments", "replicasets", "pods", "cronjobs","batch","configmaps", "secrets","serviceaccounts" ,"services", "horizontalpodautoscalers", "statefulsets", "ingresses", "namespaces" ]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: crb-deployer
+subjects:
+  - kind: ServiceAccount
+    name: deployer-sa
+    namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: deployer
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: deployer-sa
+  namespace: kube-system
+secrets:
+  - name: deployer-secret
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: deployer-secret
+  namespace: kube-system
+  annotations:
+    kubernetes.io/service-account.name: deployer-sa
+type: kubernetes.io/service-account-token

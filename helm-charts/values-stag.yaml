@@ -1,0 +1,39 @@
+---
+apps:
+  replicaCount: 2
+
+  image:
+    tag: "<IMAGE_TAG>"
+
+  prefixName: "stag"
+
+  ingress:
+    enabled: true
+    className: ""
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: my-apps-uwu-stg.detectionserver.site
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+
+  resources:
+    limits:
+      cpu: 150m
+      memory: 256Mi
+
+  extraEnv:
+    - name: ENV_TIER
+      value: stg
+    - name: ENV_ITEM_3
+      value: Uwu-item3-stg
+    - name: ENV_ITEM_4
+      value: Uwu-item4-stg
+
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 80

@@ -1,0 +1,60 @@
+name: "Pipeline to deploy: Dev Env"
+on:
+  push:
+    branches:
+      - main
+
+env:
+  REGISTRY: ghcr.io/iv1310
+  IMAGE_API_NAME: my-apps-uwu
+
+jobs:
+  go-main-pipeline:
+    name: Deploy go app to Cluster
+    permissions:
+      contents: read
+      packages: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_API_NAME }}
+          tags: |
+            type=ref,event=pr
+            type=sha
+      - name: Log in to Private Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Set short git commit SHA
+        id: vars
+        run: |
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+      - uses: chrisdickinson/setup-yq@latest
+        with:
+          yq-version: v4.40.5
+      - name: Replace image tag
+        run: |
+          yq eval '.apps.image.tag = "sha-${{ env.COMMIT_SHORT_SHA }}"' -i helm-charts/values-dev.yaml
+      - name: deploy go app to cluster
+        uses: wahyd4/kubectl-helm-action@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        with:
+          args: |
+            helm dependency build helm-charts
+            helm upgrade --install my-apps-uwu -n my-apps-uwu helm-charts -f helm-charts/values.yaml -f helm-charts/values-dev.yaml

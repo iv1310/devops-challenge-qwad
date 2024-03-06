@@ -1,0 +1,55 @@
+---
+apps:
+  nameOverride: "my-apps-uwu"
+  fullnameOverride: "my-apps-uwuuuu"
+
+  replicaCount: 1
+
+  image:
+    repository: ghcr.io/iv1310/my-apps-uwu
+    pullPolicy: Always
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "stable"
+
+  imagePullSecrets:
+    - name: ghcr
+
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+
+  ingress:
+    enabled: true
+    className: ""
+    annotations: {}
+    hosts:
+      - host: my-apps-uwu.detectionserver.site
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+
+  livenessProbe:
+    httpGet:
+      path: /items
+      port: http
+
+  readinessProbe:
+    httpGet:
+      path: /items
+      port: http
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80

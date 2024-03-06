@@ -1,0 +1,10 @@
+apiVersion: v2
+name: my-apps-uwu
+description: A Helm chart for Kubernetes
+type: application
+version: 1.0.0
+appVersion: 0.0.1
+dependencies:
+  - name: apps
+    version : 0.1.0
+    repository: "file://../../infra/kube/base"
