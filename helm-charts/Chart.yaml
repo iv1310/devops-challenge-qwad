@@ -7,4 +7,4 @@ appVersion: 0.0.1
 dependencies:
   - name: apps
     version : 0.1.0
-    repository: "file://../../infra/kube/base"
+    repository: "file://../infra/kube/base"
