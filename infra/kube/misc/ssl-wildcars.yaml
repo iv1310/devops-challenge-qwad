@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ssl-wildcards
+type: kubernetes.io/tls
+data:
+  tls.crt: REDACTED_FULLCHAIN_UWUUU
+  tls.key: REDACTED_PRIVKEY_UWUUU

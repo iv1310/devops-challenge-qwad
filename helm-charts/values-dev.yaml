@@ -17,6 +17,10 @@ apps:
 
   ingress:
     enabled: true
+    tls:
+    - hosts:
+        - my-apps-uwu-dev.detectionserver.site
+      secretName: ssl-wildcards
     hosts:
       - host: my-apps-uwu-dev.detectionserver.site
         paths:
