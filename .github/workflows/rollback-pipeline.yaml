@@ -1,0 +1,31 @@
+name: "Pipeline to Rollback: Prod Env"
+on:
+  workflow_dispatch:
+    branches:
+      - main
+    inputs:
+      service_version:
+        description: "Service version"
+        required: true
+
+jobs:
+  go-main-pipeline:
+    name: Rollback Go Version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: chrisdickinson/setup-yq@latest
+        with:
+          yq-version: v4.40.5
+      - name: Replace image tag
+        run: |
+          yq eval '.apps.image.tag = "${{ inputs.service_version }}"' -i helm-charts/values-dev.yaml
+      - name: rollback go app to cluster
+        uses: wahyd4/kubectl-helm-action@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        with:
+          args: |
+            helm dependency build helm-charts
+            helm upgrade --install my-apps-uwu -n my-apps-uwu helm-charts -f helm-charts/values.yaml -f helm-charts/values-dev.yaml
+
