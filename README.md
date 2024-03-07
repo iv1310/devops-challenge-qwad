@@ -1,6 +1,6 @@
 # DevOps Challenge Uwu
-This repository contain an application that build with golang.
-http://my-apps-uwu-dev.detectionserver.site/items
+This repository contain an application that build with golang.   
+https://my-apps-uwu-dev.detectionserver.site/items
 ![Alt Apps](./assets/apps02.png "Curl Apps")
 
 ### Tools
