@@ -76,11 +76,16 @@ In the deployment process, a rolling update approach is adopted to ensure seamle
 ## Rollback and versioning
 The version is automatically generated based on the commit SHA short for each change in the main branch but in prod use git tag with semver. Rollback can be manually triggered, requiring the definition of a variable for specifying the rollback version.
 
+## Monitoring
+I use kube-prom-stack for the monitoring and alerting.
+![Alt promprom](./assets/promprom.png "Prometheus")
+![Alt grafana](./assets/grafana.png "Grafana")
+
 ## Future Improvement
 1. Infrastructure Provisioning Repository -> Opting for a dedicated repository for infrastructure provisioning, with the flexibility to adopt a project-based infrastructure provisioning approach. This separation helps manage infrastructure changes independently from application code.
 2. Deployment Strategies -> Implementing advanced deployment strategies such as blue-green and canary deployment, tailored to specific needs. These strategies enhance deployment safety, minimize downtime, and allow for controlled rollouts. We can use argocd and argo-rollouts.
 3. Observability with Tracing/APM -> Integrating tracing and application performance monitoring (APM) using technologies like OpenTelemetry. This addition provides comprehensive observability into the application's behavior, aiding in debugging, performance optimization, and overall system health monitoring.
 4. Secret Management -> To keep our sensitive information safe, we can use AWS Secret Manager or Parameter Store along with the External-Secrets operator inside our cluster. AWS Secret Manager is like a secure vault where we store important stuff, and External-Secrets helps us smoothly bring these secrets into our Kubernetes world. It's like having a super-secret locker for our passwords and keys, making sure everything stays safe and sound, both in AWS and Kubernetes.
 5. Terragrunt improviement -> By using Terragrunt with a smart template design, we keep our Terraform code DRY even as the infrastructure gets more intricate. Terragrunt simplifies the complexity, ensuring our code remains clean, concise, and easy to manage as our infrastructure grows.
-6. Alerting -> Implement complex and detail alerting system to ensure the availability and reliability of our infrastructure.
+6. Alerting and monitoring -> Implement complex and detail alerting system to ensure the availability and reliability of our infrastructure.
 7. SSL Management -> Leverage ssl management such as cert-manager.
